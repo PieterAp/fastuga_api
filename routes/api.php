@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\LoginController;
+ 
 
 /*
 |--------------------------------------------------------------------------
@@ -16,14 +16,15 @@ use App\Http\Controllers\api\LoginController;
 |
 */
 
-//blocked by auth
-Route::group(['middleware' => 'auth'], function () {
-    Route::get('users/{user}', [UserController::class, 'getUser']);
+
+Route::middleware(['token'])->group(function () {
+    Route::get('users/{user}', [UserController::class, 'getUser'])->name('user');
     //blocked for only managers
-    Route::get('users', [UserController::class, 'getUsers']);//TODO->middleware('type:EM');
+    Route::get('users', [UserController::class, 'getUsers'])->name('users');//TODO->middleware('type:EM');
+    
 });
 
 
 Route::middleware(['api', 'auth.session'])->group(function () {
-    route::post('users', [LoginController::class, 'login'])->name('login');
+    route::post('users', [LoginController::class, 'authenticate'])->name('login');
 });
