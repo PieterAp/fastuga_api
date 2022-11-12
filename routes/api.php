@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\LoginController;
- 
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,15 +16,14 @@ use App\Http\Controllers\api\LoginController;
 |
 */
 
-
-Route::middleware(['token'])->group(function () {
-    Route::get('users/{user}', [UserController::class, 'getUser'])->name('user');
-    //blocked for only managers
-    Route::get('users', [UserController::class, 'getUsers'])->name('users');//TODO->middleware('type:EM');
-    
+Route::middleware('auth')->group(function () {
+    Route::middleware('manager')->group(function () {
+        // All manager routes go here.
+        Route::get('users', [UserController::class, 'getUsers'])->name('users');
+    });
 });
 
-
 Route::middleware(['api', 'auth.session'])->group(function () {
-    route::post('users', [LoginController::class, 'authenticate'])->name('login');
+    route::post('auth/login', [LoginController::class, 'authenticate'])->name('login');
+    route::post('auth/logout', [LoginController::class, 'logout'])->name('logout');
 });

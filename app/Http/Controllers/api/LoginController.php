@@ -54,11 +54,11 @@ class LoginController extends Controller
             $remember
         );
 
-        // INVALID CREDENTIALS
+        // WRONG CREDENTIALS
         if (!$token) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Unauthorized',
+                'message' => 'Não foi possível iniciar sessão. Verifique se o seu email e password estão corretos.',
             ], 401);
         }
 
@@ -72,5 +72,13 @@ class LoginController extends Controller
                 'type' => 'bearer',
             ]
         ]);
+    }
+
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
     }
 }
