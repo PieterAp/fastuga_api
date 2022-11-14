@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\LoginController;
+use Illuminate\Http\Request;
 
 
 /*
@@ -16,14 +17,16 @@ use App\Http\Controllers\api\LoginController;
 |
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware('sanctum')->group(function () {
     Route::middleware('manager')->group(function () {
         // All manager routes go here.
         Route::get('users', [UserController::class, 'getUsers'])->name('users');
     });
+    
 });
 
-Route::middleware(['api', 'auth.session'])->group(function () {
-    route::post('auth/login', [LoginController::class, 'authenticate'])->name('login');
-    route::post('auth/logout', [LoginController::class, 'logout'])->name('logout');
+route::post('auth/login', [LoginController::class, 'login'])->name('login');
+
+Route::group(['middleware'=>['sanctum']],function(){
+    Route::post("auth/logout",[LoginController::class,'logout']);
 });

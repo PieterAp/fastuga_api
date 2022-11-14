@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
@@ -16,9 +17,9 @@ class LoginController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function authenticate(Request $request)
+  
+    public function login(Request $request)
     {
-
         //////////////////////////////////
         //       VALIDATE INPUTS       //
 
@@ -45,7 +46,7 @@ class LoginController extends Controller
 
         $remember = $request->has('remember') ? true : false;
 
-        $token = Auth::attempt(
+        $correctCredentials = Auth::attempt(
             array(
                 'email' => $request->input('email'),
                 'password' => $request->input('password'),
@@ -55,7 +56,7 @@ class LoginController extends Controller
         );
 
         // WRONG CREDENTIALS
-        if (!$token) {
+        if (!$correctCredentials) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Não foi possível iniciar sessão. Verifique se o seu email e password estão corretos.',
@@ -63,22 +64,31 @@ class LoginController extends Controller
         }
 
         // LOGIN SUCESSFULL
-        $user = Auth::user();
-        return response()->json([
-            'status' => 'success',
-            'user' => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
+        $user = User::where('email',$request['email'])->first();
+        $token = $user->createToken('myapptoken')->accessToken->token;
+
+        $response = [
+            'status'=>true,
+            'message'=>'Login successful!',
+            'data' =>[
+                'user'=>$user,
+                'token'=>$token
             ]
-        ]);
+        ];
+
+        return response($response,201);
     }
 
-
-    public function logout(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    public function logout(Request $request){
+        Auth::user()->tokens->each(function($token, $key) {
+            $token->delete();
+        });
+    
+        $response = [
+            'status'=>true,
+            'message'=>'Logout successfully',
+        ];
+        return response($response,201);
     }
+
 }
