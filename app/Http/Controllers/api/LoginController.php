@@ -5,8 +5,12 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+
+
+const PASSPORT_SERVER_URL = "http://localhost/api";
+const CLIENT_ID = 2;
+const CLIENT_SECRET = 'Mhqxi4mCP8KJhZOjqPhvgXxNAonjVeTFixyLbdDR';
 
 class LoginController extends Controller
 {
@@ -46,7 +50,7 @@ class LoginController extends Controller
 
         $remember = $request->has('remember') ? true : false;
 
-        $correctCredentials = Auth::attempt(
+        $correctCredentials = auth()->attempt(
             array(
                 'email' => $request->input('email'),
                 'password' => $request->input('password'),
@@ -59,36 +63,41 @@ class LoginController extends Controller
         if (!$correctCredentials) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Não foi possível iniciar sessão. Verifique se o seu email e password estão corretos.',
+                'message' => 'Login failed. Wrong credentials.',
             ], 401);
         }
 
         // LOGIN SUCESSFULL
-        $user = User::where('email',$request['email'])->first();
-        $token = $user->createToken('myapptoken')->accessToken->token;
+        //maybe fix this red but not sure how
+        //not sure if we need to verify is the user already have an token generated ou not
+        $token = auth()->user()->createToken('API Token')->accessToken;
+        return response(['user' => auth()->user(), 'token' => $token]);
+    }
+ 
+    public function register(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|confirmed',
+            'license_plate' => 'required',
+        ]);
 
-        $response = [
-            'status'=>true,
-            'message'=>'Login successful!',
-            'data' =>[
-                'user'=>$user,
-                'token'=>$token
-            ]
-        ];
+        //validate license plate format
+        //confirmed - checks is password is equal to password_confirmation (needs this form input formats to work)
+        $data['password'] = bcrypt($request->password);
+        $user = User::create($data);
+        $token = $user->createToken('API Token')->accessToken;
 
-        return response($response,201);
+        return response([ 'user' => $user, 'token' => $token]);
     }
 
     public function logout(Request $request){
-        Auth::user()->tokens->each(function($token, $key) {
-            $token->delete();
-        });
-    
-        $response = [
-            'status'=>true,
-            'message'=>'Logout successfully',
-        ];
-        return response($response,201);
+        $accessToken = $request->user()->token();
+        $token = $request->user()->tokens->find($accessToken);
+        $token->revoke();
+        $token->delete();
+        return response(['msg' => 'Token revoked'], 200);    
     }
 
 }
