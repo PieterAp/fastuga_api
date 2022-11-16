@@ -73,20 +73,41 @@ class LoginController extends Controller
  
     public function register(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
-            'license_plate' => 'required',
-        ]);
 
+        $data = array(
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+            'password_confirmation' => $request->input('password_confirmation'),
+            'license_plate' => $request->input('license_plate'),
+        );
+
+        //email validation is acepting bruno@gmail.com2 should it?
         //validate license plate format
-        //confirmed - checks is password is equal to password_confirmation (needs this form input formats to work)
+        $validator = Validator::make(
+            $data,
+            array(
+                'name' => 'required|max:255',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|confirmed',
+                'password_confirmation' => 'required|same:password',
+                'license_plate' => 'required'
+            )
+        );
+
+        if ($validator->fails()) {
+            $fieldsWithErrorMessagesArray = $validator->messages()->get('*');
+            return response()->json([
+                'status' => 'error',
+                'message' => $fieldsWithErrorMessagesArray,
+            ], 400);
+        }
+
         $data['password'] = bcrypt($request->password);
         $user = User::create($data);
         $token = $user->createToken('API Token')->accessToken;
 
-        return response([ 'user' => $user, 'token' => $token]);
+        response()->json(['success' => 'success'], 200);
     }
 
     public function logout(Request $request){
