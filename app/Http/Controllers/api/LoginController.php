@@ -26,7 +26,7 @@ class LoginController extends Controller
     {
         //////////////////////////////////
         //       VALIDATE INPUTS       //
-
+     
         $validator = Validator::make(
             array(
                 'email' => $request->input('email'),
@@ -49,7 +49,7 @@ class LoginController extends Controller
         //////////////////////////////////////
 
         $remember = $request->has('remember') ? true : false;
-
+        
         $correctCredentials = auth()->attempt(
             array(
                 'email' => $request->input('email'),
@@ -61,17 +61,14 @@ class LoginController extends Controller
 
         // WRONG CREDENTIALS
         if (!$correctCredentials) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Login failed. Wrong credentials.',
-            ], 401);
+            return response('Login failed. Wrong credentials', 401);
         }
 
         // LOGIN SUCESSFULL
         //maybe fix this red but not sure how
-        //not sure if we need to verify is the user already have an token generated ou not
+        //not sure if we need to verify if the user already have an token generated ou not
         $token = auth()->user()->createToken('API Token')->accessToken;
-        return response(['user' => auth()->user(), 'token' => $token]);
+        return response(['token' => $token]);
     }
  
     public function register(Request $request)
