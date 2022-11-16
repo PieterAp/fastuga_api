@@ -104,9 +104,8 @@ class LoginController extends Controller
         }
 
         $data['password'] = bcrypt($request->password);
-        $user = User::create($data);
-        $token = $user->createToken('API Token')->accessToken;
-
+        User::create($data);
+       
         response()->json(['success' => 'success'], 200);
     }
 
