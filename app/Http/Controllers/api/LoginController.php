@@ -3,13 +3,9 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
-
-const PASSPORT_SERVER_URL = "http://localhost/api";
 
 class LoginController extends Controller
 {
@@ -24,7 +20,6 @@ class LoginController extends Controller
     {
         $this->client = DB::table('oauth_clients')->where('id', 2)->first();
     }
-
 
     private function passportAuthenticationData($email, $password)
     {
@@ -42,7 +37,7 @@ class LoginController extends Controller
     {
         //////////////////////////////////
         //       VALIDATE INPUTS       //
-     
+
         $validator = Validator::make(
             array(
                 'email' => $request->input('email'),
@@ -61,11 +56,10 @@ class LoginController extends Controller
                 'message' => $fieldsWithErrorMessagesArray,
             ], 400);
         }
-
         //////////////////////////////////////
 
         $remember = $request->has('remember') ? true : false;
-        
+
         $correctCredentials = auth()->attempt(
             array(
                 'email' => $request->input('email'),
@@ -84,48 +78,15 @@ class LoginController extends Controller
         }
 
         // LOGIN SUCESSFULL
-        //maybe fix this red but not sure how
-        //not sure if we need to verify is the user already have an token generated ou not
-        $token = auth()->user()->createToken('API Token')->accessToken;
-        return response(['user' => auth()->user(), 'token' => $token]);
-    }
-
-    public function register(Request $request)
-    {
-
-        $data = array(
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
-            'password_confirmation' => $request->input('password_confirmation'),
-            'license_plate' => $request->input('license_plate'),
+        $request = Request::create(
+            '/oauth/token',
+            'POST',
+            $this->passportAuthenticationData($request->email, $request->password)
         );
 
-        //email validation is acepting bruno@gmail.com2 should it?
-        //validate license plate format
-        $validator = Validator::make(
-            $data,
-            array(
-                'name' => 'required|max:255',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|confirmed',
-                'password_confirmation' => 'required|same:password',
-                'license_plate' => 'required'
-            )
-        );
-
-        if ($validator->fails()) {
-            $fieldsWithErrorMessagesArray = $validator->messages()->get('*');
-            return response()->json([
-                'status' => 'error',
-                'message' => $fieldsWithErrorMessagesArray,
-            ], 400);
-        }
-
-        $data['password'] = bcrypt($request->password);
-        User::create($data);
-
-        response()->json(['success' => 'success'], 200);
+        $response = app()->handle($request);
+        $auth_server_response = json_decode((string) $response->content(), true);
+        return $auth_server_response;
     }
 
     public function logout(Request $request)

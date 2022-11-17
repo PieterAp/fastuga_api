@@ -21,3 +21,4 @@ Route::middleware('auth:api')->group(function () {
 });
 
 route::post('auth/login', [LoginController::class, 'login'])->name('login');
+
