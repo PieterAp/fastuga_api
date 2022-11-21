@@ -1,15 +1,15 @@
 <?php
-
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
-use App\Models\User;
+use App\Http\Resources\CustomerResource;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class CustomerController extends Controller
 {
- /**
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -18,14 +18,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::all());
+        return CustomerResource::collection(Customer::all());
     }
-
-    public function getDrivers()
-    {
-        return User::where('type','=','ED')->get();
-    }
-
 
     /**
      * Store a newly created resource in storage.
@@ -36,10 +30,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $user = new User();
-        $user->fill($data);
-        $user->save();
-        return new UserResource($user);
+        $customer = new Customer();
+        $customer->fill($data);
+        $customer->save();
+        return new CustomerResource($customer);
     }
 
     /**
@@ -48,9 +42,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(Customer $customer)
     {
-        return new UserResource($user);
+        return new CustomerResource($customer);
     }
 
     /**
@@ -60,11 +54,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,User $user)
+    public function update(Request $request,Customer $customer)
     {
-        $user->fill($request->all());
-        $user->save();
-        return new UserResource($user);
+        $customer->fill($request->all());
+        $customer->save();
+        return new CustomerResource($customer);
     }
 
     /**
@@ -73,9 +67,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(Customer $customer)
     {
-        $user->delete();
-        return new UserResource($user);
+        $customer->delete();
+        return new CustomerResource($customer);
     }
 }

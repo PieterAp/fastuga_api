@@ -1,15 +1,15 @@
 <?php
-
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
-use App\Models\User;
+use App\Http\Resources\OrderResource;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class OrderController extends Controller
 {
- /**
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -18,14 +18,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::all());
+        return OrderResource::collection(Order::all());
     }
-
-    public function getDrivers()
-    {
-        return User::where('type','=','ED')->get();
-    }
-
 
     /**
      * Store a newly created resource in storage.
@@ -36,10 +30,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $user = new User();
-        $user->fill($data);
-        $user->save();
-        return new UserResource($user);
+        $order = new Order();
+        $order->fill($data);
+        $order->save();
+        return new OrderResource($order);
     }
 
     /**
@@ -48,9 +42,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(Order $order)
     {
-        return new UserResource($user);
+        return new OrderResource($order);
     }
 
     /**
@@ -60,11 +54,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,User $user)
+    public function update(Request $request,Order $order)
     {
-        $user->fill($request->all());
-        $user->save();
-        return new UserResource($user);
+        $order->fill($request->all());
+        $order->save();
+        return new OrderResource($order);
     }
 
     /**
@@ -73,9 +67,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(Order $order)
     {
-        $user->delete();
-        return new UserResource($user);
+        $order->delete();
+        return new OrderResource($order);
     }
 }

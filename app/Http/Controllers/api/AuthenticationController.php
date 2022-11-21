@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB; 
 
-class LoginController extends Controller
+class AuthenticationController extends Controller
 {
     /**
      * Handle an authentication attempt.
@@ -92,14 +92,20 @@ class LoginController extends Controller
 
     public function register(Request $request)
     {
+    
         $data = array(
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => $request->input('password'),
             'password_confirmation' => $request->input('password_confirmation'),
-            'license_plate' => $request->input('license_plate'),
         );
 
+        if($request->input('license_plate')!=null){
+            $data["license_plate"] =$request->input('license_plate');
+            $data["type"] = "ED";
+        }
+
+        //return $data;
         //email validation is acepting bruno@gmail.com2 should it?
         //validate license plate format
         $validator = Validator::make(
@@ -108,8 +114,7 @@ class LoginController extends Controller
                 'name' => 'required|max:255',
                 'email' => 'required|email|unique:users',
                 'password' => 'required|confirmed',
-                'password_confirmation' => 'required|same:password',
-                'license_plate' => 'required'
+                'password_confirmation' => 'required|same:password'
             )
         );
 
@@ -122,8 +127,9 @@ class LoginController extends Controller
         }
 
         $data['password'] = bcrypt($request->password);
-        User::create($data);
+        $user =User::create($data);
        
+        return $user;
         response()->json(['success' => 'success'], 200);
     }
 
