@@ -87,6 +87,7 @@ class AuthenticationController extends Controller
 
         $response = app()->handle($request);
         $auth_server_response = json_decode((string) $response->content(), true);
+        
         return $auth_server_response;
     }
 
@@ -127,9 +128,8 @@ class AuthenticationController extends Controller
         }
 
         $data['password'] = bcrypt($request->password);
-        $user =User::create($data);
-       
-        return $user;
+        User::create($data);
+
         response()->json(['success' => 'success'], 200);
     }
 
