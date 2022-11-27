@@ -18,6 +18,7 @@ class OrderController extends Controller
      */
     public function index()
     {
+        OrderResource::$format = 'detailed';
         return OrderResource::collection(Order::all());
     }
 

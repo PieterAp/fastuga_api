@@ -127,10 +127,8 @@ class AuthenticationController extends Controller
         }
 
         $data['password'] = bcrypt($request->password);
-        $user =User::create($data);
        
-        return $user;
-        response()->json(['success' => 'success'], 200);
+        return response()->json(['success' => 'success'], 200);
     }
 
     public function logout(Request $request)
