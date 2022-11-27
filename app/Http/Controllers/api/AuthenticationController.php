@@ -87,6 +87,7 @@ class AuthenticationController extends Controller
 
         $response = app()->handle($request);
         $auth_server_response = json_decode((string) $response->content(), true);
+        
         return $auth_server_response;
     }
 
