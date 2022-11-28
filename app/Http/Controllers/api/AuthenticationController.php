@@ -128,6 +128,8 @@ class AuthenticationController extends Controller
         }
 
         $data['password'] = bcrypt($request->password);
+
+        User::create($data);
        
         return response()->json(['success' => 'success'], 200);
     }
