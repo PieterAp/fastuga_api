@@ -31,7 +31,17 @@ return new class extends Migration
             $table->string('nif', 9)->nullable();
             $table->enum('default_payment_type', ['VISA', 'PAYPAL', 'MBWAY'])->nullable();
             $table->string('default_payment_reference')->nullable();
+            $table->json('custom')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
 
+        Schema::create('drivers', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('phone', 13);
+            $table->string('license_plate', 8);
             $table->json('custom')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -68,6 +78,14 @@ return new class extends Migration
             // null if order was not delivered (status != "D")
             $table->bigInteger('delivered_by')->unsigned()->nullable();
             $table->foreign('delivered_by')->references('id')->on('users');
+
+            // pickup address
+            $table->string('pickup_address')->nullable();
+            // delivery address
+            $table->string('delivery_address')->nullable();
+
+            // calculated distance
+            $table->string('delivery_distance')->nullable();
 
             $table->json('custom')->nullable();
 

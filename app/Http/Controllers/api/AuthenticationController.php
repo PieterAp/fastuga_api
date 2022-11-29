@@ -4,9 +4,10 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Driver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\DB;
 
 class AuthenticationController extends Controller
 {
@@ -87,13 +88,13 @@ class AuthenticationController extends Controller
 
         $response = app()->handle($request);
         $auth_server_response = json_decode((string) $response->content(), true);
-        
+
         return $auth_server_response;
     }
 
     public function register(Request $request)
     {
-    
+
         $data = array(
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -101,10 +102,6 @@ class AuthenticationController extends Controller
             'password_confirmation' => $request->input('password_confirmation'),
         );
 
-        if($request->input('license_plate')!=null){
-            $data["license_plate"] =$request->input('license_plate');
-            $data["type"] = "ED";
-        }
 
         //return $data;
         //email validation is acepting bruno@gmail.com2 should it?
@@ -129,8 +126,22 @@ class AuthenticationController extends Controller
 
         $data['password'] = bcrypt($request->password);
 
-        User::create($data);
-       
+        if ($request->input('license_plate') != null  && $request->input('phone') != null) {
+            $data["type"] = "ED";
+            $user = User::create($data);
+
+            $driverData = array(
+                'phone' => $request->input('phone'),
+                'license_plate' => $request->input('license_plate'),
+                'user_id' => $user['id']
+            );
+          
+            Driver::create($driverData);
+
+        } else {
+            User::create($data);
+        }
+
         return response()->json(['success' => 'success'], 200);
     }
 
