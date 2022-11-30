@@ -5,8 +5,6 @@ use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\AuthenticationController;
 use App\Http\Controllers\api\CustomerController;
 use App\Http\Controllers\api\OrderController;
-use App\Http\Controllers\api\DriverController;
-use App\Http\Controllers\api\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +20,7 @@ use App\Http\Controllers\api\ProfileController;
 Route::middleware('auth:api')->group(function () {
     Route::post("auth/logout",[AuthenticationController::class,'logout']);
     //ONLY DRIVERS
-    Route::get('users/drivers',[UserController::class,'getDrivers']);
+    Route::get('/users/profile', [UserController::class,'getProfile']);
     //ONLY CUSTOMERS
     //Route::get('users/customers',[UserController::class,'getCustomers']);
     //All users CRUD
@@ -33,6 +31,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('customers',CustomerController::class);
     //ALL drivers CRUD
     Route::apiResource('drivers',DriverController::class);
+
 });
 
 Route::post('auth/login', [AuthenticationController::class, 'login']);

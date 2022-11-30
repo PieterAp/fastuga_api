@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\User;
+use App\Models\Driver;
 
 class DriverResource extends JsonResource
 {
@@ -15,13 +15,12 @@ class DriverResource extends JsonResource
      */
     public function toArray($request)
     {
-        $user = User::where('id',$this->user_id)->first();
-        //return $user;
+        $driver = Driver::where('user_id',$this->id)->first();
         return [
-            'name' => $user->name,
-            'email' => $user->email,
-            'phone'=> $this->phone,
-            'license_plate'=> $this->license_plate,
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone'=>$driver->phone,
+            'license_plate'=> $driver->license_plate,
         ];      
     }
 }

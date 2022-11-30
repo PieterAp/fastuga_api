@@ -135,7 +135,6 @@ class AuthenticationController extends Controller
                 'license_plate' => $request->input('license_plate'),
                 'user_id' => $user['id']
             );
-          
             Driver::create($driverData);
 
         } else {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\DriverResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,9 +22,13 @@ class UserController extends Controller
         return UserResource::collection(User::all());
     }
 
-    public function getDrivers()
+    public function getProfile(Request $request)
     {
-        return User::where('type','=','ED')->get();
+        $data = $request->user();
+        if($data['type'] == "ED"){
+            return new DriverResource($data);
+        }
+        return $data;
     }
 
 
