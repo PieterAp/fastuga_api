@@ -6,6 +6,7 @@ use App\Http\Controllers\api\AuthenticationController;
 use App\Http\Controllers\api\CustomerController;
 use App\Http\Controllers\api\OrderController;
 use App\Http\Controllers\api\DriverController;
+use App\Http\Controllers\api\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
