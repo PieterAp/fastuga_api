@@ -66,6 +66,7 @@ return new class extends Migration
             // P "Preparing", R "Ready", D "Delivered", C "Cancelled"
             $table->bigInteger('customer_id')->unsigned()->nullable();
             $table->foreign('customer_id')->references('id')->on('customers');
+            $table->string('customer_name')->nullable();
             $table->decimal('total_price', 8, 2);
             $table->decimal('total_paid', 8, 2);
             $table->decimal('total_paid_with_points', 8, 2);

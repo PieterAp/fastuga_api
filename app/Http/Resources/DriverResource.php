@@ -15,12 +15,18 @@ class DriverResource extends JsonResource
      */
     public function toArray($request)
     {
+       // return parent::toArray($request);      
         $driver = Driver::where('user_id',$this->id)->first();
-        return [
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone'=>$driver->phone,
-            'license_plate'=> $driver->license_plate,
-        ];      
+        if($driver!=null){
+            return  [
+                'name' => $this->name,
+                'email' => $this->email,
+                'phone'=>$driver->phone,
+                'license_plate'=> $driver->license_plate,
+            ]; 
+        }else{
+            return parent::toArray($request);   
+        }
+            
     }
 }
