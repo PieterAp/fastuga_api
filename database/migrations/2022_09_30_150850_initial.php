@@ -86,7 +86,7 @@ return new class extends Migration
             $table->string('delivery_address')->nullable();
 
             // calculated distance
-            $table->string('delivery_distance')->nullable();
+            $table->decimal('delivery_distance')->nullable();
 
             $table->json('custom')->nullable();
 

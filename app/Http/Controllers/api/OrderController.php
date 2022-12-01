@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
@@ -19,7 +20,7 @@ class OrderController extends Controller
     public function index()
     {
         //OrderResource::$format = 'detailed';
-        $readyToDeliveryOrders = Order::where('status','R')->get();
+        $readyToDeliveryOrders = Order::where('status', 'R')->get();
         return OrderResource::collection($readyToDeliveryOrders);
     }
 
@@ -32,6 +33,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+        //calculate delivery_distance
         $order = new Order();
         $order->fill($data);
         $order->save();
@@ -56,8 +58,33 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Order $order)
+    public function update(Request $request, Order $order)
     {
+        //update distance if necessary
+        if ($order['pickup_address'] != $request->pickup_address || $order['delivery_address'] != $request->delivery_address) {
+            $client = new \GuzzleHttp\Client();
+
+            $result = $client->get("http://api.positionstack.com/v1/forward?access_key=d8cc239cc1f09552d7d37f11000ce9d2&query={$request->pickup_address}&output=json&limit=1");
+
+            $startLocation = json_decode($result->getBody(), true);
+
+            $startLat = $startLocation['data'][0]['latitude'];
+            $startLng = $startLocation['data'][0]['longitude'];
+
+            $result = $client->get("http://api.positionstack.com/v1/forward?access_key=d8cc239cc1f09552d7d37f11000ce9d2&query={$request->delivery_address}&output=json&limit=1");
+
+            $endLocation = json_decode($result->getBody(), true);
+
+            $endLat = $endLocation['data'][0]['latitude'];
+            $endLng = $endLocation['data'][0]['longitude'];
+
+            $result = $client->get("https://graphhopper.com/api/1/matrix?point={$startLat},{$startLng}&point={$endLat},{$endLng}&out_array=distances&key=4790c76f-21e8-4781-8057-d26bc5cc655d");
+
+            $routeDistance = json_decode($result->getBody(), true);
+
+            $request['delivery_distance'] = $routeDistance['distances'][0][1] / 1000;
+        }
+
         $order->fill($request->all());
         $order->save();
         return new OrderResource($order);

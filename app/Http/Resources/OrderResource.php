@@ -28,7 +28,7 @@ class OrderResource extends JsonResource
                 'ticket_number'=> $this->ticket_number,
                 'pickup_address'=> $this->pickup_address,
                 'delivery_address'=> $this->delivery_address,
-                'delivery_distance'=> $this->delivery_address,
+                'delivery_distance'=> $this->delivery_distance,
                 'created_at'=> $this->created_at,
             ];   
 

@@ -20,6 +20,7 @@ class Order extends Model
         'status',
         'delivery_address',
         'pickup_address',
+        'delivery_distance',
         'created_at'
     ];
 
