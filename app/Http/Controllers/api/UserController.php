@@ -36,6 +36,7 @@ class UserController extends Controller
     {
         $user = $request->user();
         $user->fill($request->all());
+        $user['password'] = bcrypt($request->password);
         $user->save();
         $driver = Driver::where('user_id',$user->id)->first();
         $driver->fill($request->all());
