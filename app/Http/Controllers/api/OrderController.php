@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use Exception;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -63,26 +64,32 @@ class OrderController extends Controller
         //update distance if necessary
         if ($order['pickup_address'] != $request->pickup_address || $order['delivery_address'] != $request->delivery_address) {
             $client = new \GuzzleHttp\Client();
+            try{
+                $result = $client->get("http://api.positionstack.com/v1/forward?access_key=d8cc239cc1f09552d7d37f11000ce9d2&query={$request->pickup_address}&output=json&limit=1");
 
-            $result = $client->get("http://api.positionstack.com/v1/forward?access_key=d8cc239cc1f09552d7d37f11000ce9d2&query={$request->pickup_address}&output=json&limit=1");
-
-            $startLocation = json_decode($result->getBody(), true);
-
-            $startLat = $startLocation['data'][0]['latitude'];
-            $startLng = $startLocation['data'][0]['longitude'];
-
-            $result = $client->get("http://api.positionstack.com/v1/forward?access_key=d8cc239cc1f09552d7d37f11000ce9d2&query={$request->delivery_address}&output=json&limit=1");
-
-            $endLocation = json_decode($result->getBody(), true);
-
-            $endLat = $endLocation['data'][0]['latitude'];
-            $endLng = $endLocation['data'][0]['longitude'];
-
-            $result = $client->get("https://graphhopper.com/api/1/matrix?point={$startLat},{$startLng}&point={$endLat},{$endLng}&out_array=distances&key=4790c76f-21e8-4781-8057-d26bc5cc655d");
-
-            $routeDistance = json_decode($result->getBody(), true);
-
-            $request['delivery_distance'] = $routeDistance['distances'][0][1] / 1000;
+                $startLocation = json_decode($result->getBody(), true);
+    
+                $startLat = $startLocation['data'][0]['latitude'];
+                $startLng = $startLocation['data'][0]['longitude'];
+    
+                $result = $client->get("http://api.positionstack.com/v1/forward?access_key=d8cc239cc1f09552d7d37f11000ce9d2&query={$request->delivery_address}&output=json&limit=1");
+    
+                $endLocation = json_decode($result->getBody(), true);
+    
+                $endLat = $endLocation['data'][0]['latitude'];
+                $endLng = $endLocation['data'][0]['longitude'];
+    
+                $result = $client->get("https://graphhopper.com/api/1/matrix?point={$startLat},{$startLng}&point={$endLat},{$endLng}&out_array=distances&key=4790c76f-21e8-4781-8057-d26bc5cc655d");
+    
+                $routeDistance = json_decode($result->getBody(), true);
+    
+                $request['delivery_distance'] = $routeDistance['distances'][0][1] / 1000;
+            }catch(Exception $e){
+                $request['delivery_distance'] = null;
+                $order->fill($request->all());
+                $order->save();
+                return new OrderResource($order);
+            }
         }
 
         $order->fill($request->all());
