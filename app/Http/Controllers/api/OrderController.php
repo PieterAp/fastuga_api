@@ -19,7 +19,8 @@ class OrderController extends Controller
     public function index()
     {
         //OrderResource::$format = 'detailed';
-        return OrderResource::collection(Order::all());
+        $readyToDeliveryOrders = Order::where('status','R')->get();
+        return OrderResource::collection($readyToDeliveryOrders);
     }
 
     /**

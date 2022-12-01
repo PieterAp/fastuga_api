@@ -16,4 +16,11 @@ class Order extends Model
      */
     protected $table = 'orders';
 
+    protected $fillable = [
+        'status',
+        'delivery_address',
+        'pickup_address',
+        'created_at'
+    ];
+
 }

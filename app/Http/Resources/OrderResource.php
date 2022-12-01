@@ -23,6 +23,7 @@ class OrderResource extends JsonResource
             default:
             $data = [   
                 'id'=> $this->id,
+                'status'=> $this->status,
                 'customer_name'=> $this->customer_name,
                 'ticket_number'=> $this->ticket_number,
                 'pickup_address'=> $this->pickup_address,
