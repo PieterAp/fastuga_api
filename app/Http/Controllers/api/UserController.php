@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DriverResource;
 use App\Http\Resources\UserResource;
+use App\Models\Driver;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -31,6 +32,16 @@ class UserController extends Controller
         return $data;
     }
 
+    public function editProfile(Request $request)
+    {
+        $user = $request->user();
+        $user->fill($request->all());
+        $user->save();
+        $driver = Driver::where('user_id',$user->id)->first();
+        $driver->fill($request->all());
+        $driver->save();
+        return new DriverResource($user);
+    }
 
     /**
      * Store a newly created resource in storage.

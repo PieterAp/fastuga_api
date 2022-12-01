@@ -20,10 +20,9 @@ use App\Http\Controllers\api\DriverController;
 
 Route::middleware('auth:api')->group(function () {
     Route::post("auth/logout",[AuthenticationController::class,'logout']);
-    //ONLY DRIVERS
+    //Profile routes
     Route::get('/users/profile', [UserController::class,'getProfile']);
-    //ONLY CUSTOMERS
-    //Route::get('users/customers',[UserController::class,'getCustomers']);
+    Route::put('/users/profile', [UserController::class,'editProfile']);
     //All users CRUD
     Route::apiResource('users', UserController::class);
     //ALL orders CRUD
