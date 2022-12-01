@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
- /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -26,7 +26,7 @@ class UserController extends Controller
     public function getProfile(Request $request)
     {
         $data = $request->user();
-        if($data['type'] == "ED"){
+        if ($data['type'] == "ED") {
             return new DriverResource($data);
         }
         return $data;
@@ -36,9 +36,11 @@ class UserController extends Controller
     {
         $user = $request->user();
         $user->fill($request->all());
-        $user['password'] = bcrypt($request->password);
+        if ($request->password != null) {
+            $user['password'] = bcrypt($request->password);
+        }
         $user->save();
-        $driver = Driver::where('user_id',$user->id)->first();
+        $driver = Driver::where('user_id', $user->id)->first();
         $driver->fill($request->all());
         $driver->save();
         return new DriverResource($user);
@@ -77,7 +79,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,User $user)
+    public function update(Request $request, User $user)
     {
         $user->fill($request->all());
         $user->save();
