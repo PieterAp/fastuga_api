@@ -17,22 +17,23 @@ class OrderResource extends JsonResource
     public function toArray($request)
     {
 
-        switch(OrderResource::$format){
+        switch (OrderResource::$format) {
             case 'detailed':
                 return parent::toArray($request);
             default:
-            $data = [   
-                'id'=> $this->id,
-                'status'=> $this->status,
-                'customer_name'=> $this->customer_name,
-                'ticket_number'=> $this->ticket_number,
-                'pickup_address'=> $this->pickup_address,
-                'delivery_address'=> $this->delivery_address,
-                'delivery_distance'=> $this->delivery_distance,
-                'created_at'=> $this->created_at,
-            ];   
+                $data = [
+                    'id' => $this->id,
+                    'status' => $this->status,
+                    'customer_name' => $this->customer_name,
+                    'ticket_number' => $this->ticket_number,
+                    'pickup_address' => $this->pickup_address,
+                    'delivery_address' => $this->delivery_address,
+                    'delivery_distance' => $this->delivery_distance,
+                    'delivered_by' => $this->delivered_by,
+                    'created_at' => $this->created_at,
+                ];
 
-            return $data;
-        }  
+                return $data;
+        }
     }
 }

@@ -21,6 +21,7 @@ class Order extends Model
         'delivery_address',
         'pickup_address',
         'delivery_distance',
+        'delivered_by',
         'created_at'
     ];
 
