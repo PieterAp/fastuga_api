@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\DriverResource;
 use App\Http\Resources\UserResource;
 use App\Models\Driver;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -30,6 +31,15 @@ class UserController extends Controller
             return new DriverResource($data);
         }
         return $data;
+    }
+
+
+
+    public function getActiveOrders(Request $request)
+    {
+        $user = $request->user();
+        $data = Order::where('delivered_by', $user->id)->get();
+        return UserResource::collection($data);
     }
 
     public function editProfile(Request $request)

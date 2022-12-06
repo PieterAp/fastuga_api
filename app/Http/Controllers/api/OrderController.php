@@ -21,7 +21,13 @@ class OrderController extends Controller
     public function index()
     {
         //OrderResource::$format = 'detailed';
-        $readyToDeliveryOrders = Order::where('status', 'R')->get();
+        return OrderResource::collection(Order::all());
+    }
+
+    public function indexDelivery()
+    {
+        //OrderResource::$format = 'detailed';
+        $readyToDeliveryOrders = Order::whereNull('delivered_by')->where('status','!=','D')->get();
         return OrderResource::collection($readyToDeliveryOrders);
     }
 
@@ -94,9 +100,11 @@ class OrderController extends Controller
 
         $order->fill($request->all());
 
-        if ($request->delivered_by != null) {
+        if ($request->delivered_by != "null") {
             $user = $request->user();
             $order['delivered_by'] = $user['id'];
+        }else{
+            $order['delivered_by']=null;
         }
 
         $order->save();
