@@ -21,6 +21,7 @@ class Driver extends Model
         'user_id',
         'license_plate',
         'phone',
+        'balance'
     ];
 
 }
