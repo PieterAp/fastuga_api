@@ -23,6 +23,7 @@ class DriverResource extends JsonResource
                 'email' => $this->email,
                 'phone'=>$driver->phone,
                 'license_plate'=> $driver->license_plate,
+                'balance'=> $driver->balance
             ]; 
         }else{
             return parent::toArray($request);   
