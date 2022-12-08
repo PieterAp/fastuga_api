@@ -23,6 +23,8 @@ Route::middleware('auth:api')->group(function () {
     //Profile routes
     Route::get('/users/profile', [UserController::class,'getProfile']);
     Route::put('/users/profile', [UserController::class,'editProfile']);
+    //Confirm order delivered
+    Route::put('/orders/{order}/confirm', [OrderController::class,'confirmOrder']);
     //Avalivable order to drivers
     Route::get('/drivers/orders', [OrderController::class,'indexDelivery']);
     //Active orders 

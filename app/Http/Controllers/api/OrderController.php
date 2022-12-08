@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\Driver;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -29,6 +30,17 @@ class OrderController extends Controller
         //OrderResource::$format = 'detailed';
         $readyToDeliveryOrders = Order::whereNull('delivered_by')->where('status','!=','D')->get();
         return OrderResource::collection($readyToDeliveryOrders);
+    }
+
+
+    public function confirmOrder(Request $request, Order $order){
+        $user = $request->user();
+        $order->fill($request->all());
+        $order->save();
+        $driver = Driver::where('user_id', $user->id)->first();
+        $driver['balance']= $driver['balance']+$request->balance;
+        $driver->save();
+        return new OrderResource($order);
     }
 
     /**

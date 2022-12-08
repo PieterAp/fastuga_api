@@ -42,6 +42,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('phone', 13);
             $table->string('license_plate', 8);
+            $table->decimal('balance')->nullable();
             $table->json('custom')->nullable();
             $table->timestamps();
             $table->softDeletes();
