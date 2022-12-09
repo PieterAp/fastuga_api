@@ -92,6 +92,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $user->fill($request->all());
+        $user['password'] = bcrypt($request->password);
         $user->save();
         return new UserResource($user);
     }
