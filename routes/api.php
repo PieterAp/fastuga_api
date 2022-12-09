@@ -40,6 +40,9 @@ Route::middleware('auth:api')->group(function () {
     //ALL drivers CRUD
     Route::apiResource('drivers',DriverController::class);
 
+    //change password
+    Route::put('/users/{user}/changePassword', [UserController::class,'changePassword']);
+
 });
 
 Route::post('auth/login', [AuthenticationController::class, 'login']);

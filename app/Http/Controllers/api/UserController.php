@@ -9,6 +9,8 @@ use App\Models\Driver;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -33,7 +35,41 @@ class UserController extends Controller
         return $data;
     }
 
+    public function changePassword(Request $request, User $user)
+    {
+        $data = array(
+            'current_password' => $request->input('current_password'),
+            'password' => $request->input('password'),
+            'password_confirmation' => $request->input('password_confirmation'),
+        );
 
+        $validator = Validator::make(
+            $data,
+            array(
+                'password' => 'required|confirmed',
+                'password_confirmation' => 'required|same:password'
+            )
+        );
+
+        if ($validator->fails()) {
+            $fieldsWithErrorMessagesArray = $validator->messages()->get('*');
+            return response()->json([
+                'status' => 'error',
+                'message' => $fieldsWithErrorMessagesArray,
+            ], 400);
+        }
+
+        if (Hash::check($request->current_password,$user['password'])) {
+            $user['password'] = bcrypt($request->password);
+            $user->save();
+            return new UserResource($user);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'The current password is incorrect',
+        ], 400);
+    }
 
     public function getActiveOrders(Request $request)
     {
