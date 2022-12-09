@@ -27,6 +27,8 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/orders/{order}/confirm', [OrderController::class,'confirmOrder']);
     //Avalivable order to drivers
     Route::get('/drivers/orders', [OrderController::class,'indexDelivery']);
+    //orders by driver
+    Route::get('/orders/driver/{driver}', [OrderController::class,'ordersByDriver']);
     //Active orders 
     Route::get('/users/orders', [UserController::class,'getActiveOrders']);
     //All users CRUD

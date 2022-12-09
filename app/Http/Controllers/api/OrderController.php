@@ -32,6 +32,16 @@ class OrderController extends Controller
         return OrderResource::collection($readyToDeliveryOrders);
     }
 
+    public function ordersByDriver(Request $request)
+    {
+        OrderResource::$format = 'driver';
+        $user = $request->user();
+        $driver = Driver::where('user_id', $user->id)->first();
+        //$order = $request->order();
+        $order = Order::where('delivered_by', $driver->user_id)->get();
+        return $order;
+    }
+
 
     public function confirmOrder(Request $request, Order $order){
         $user = $request->user();

@@ -20,6 +20,13 @@ class OrderResource extends JsonResource
         switch (OrderResource::$format) {
             case 'detailed':
                 return parent::toArray($request);
+            
+            case 'driver':
+                $data = [
+                    'customer_id' => $this->customer_id,
+                ];
+                return $data;
+                
             default:
                 $data = [
                     'id' => $this->id,
