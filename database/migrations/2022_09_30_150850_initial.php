@@ -63,8 +63,8 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->integer('ticket_number');
-            $table->enum('status', ['P', 'R', 'D', 'C']);
-            // P "Preparing", R "Ready", D "Delivered", C "Cancelled"
+            $table->enum('status', ['P', 'R', 'O', 'D', 'C']);
+            // P "Preparing", R "Ready", O "onRoute", D "Delivered", C "Cancelled"
             $table->bigInteger('customer_id')->unsigned()->nullable();
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->string('customer_name')->nullable();
