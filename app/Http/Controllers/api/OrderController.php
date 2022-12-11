@@ -120,6 +120,13 @@ class OrderController extends Controller
             }
         }
 
+        if ($request->delivered_by=="null") {
+            $order->fill($request->all());
+            $order['delivered_by']=null;
+            $order->save();
+            return new OrderResource($order);
+        }
+
         if($order['delivered_by']==null){
             if ($request->delivered_by != "null") {
                 $user = $request->user();
@@ -128,8 +135,7 @@ class OrderController extends Controller
                 $order['delivered_by']=null;
             }
         }else if($request->delivered_by!=null){
-            $order->fill($request->all());
-            $order['delivered_by']=null;
+            
             return response()->json(['error' => 'Someone was faster than you and already took this order'], 409);
         }else{
             $order->fill($request->all());
