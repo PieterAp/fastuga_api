@@ -89,6 +89,9 @@ return new class extends Migration
             // calculated distance
             $table->decimal('delivery_distance')->nullable();
 
+            // calculate time
+            $table->decimal('delivery_time')->nullable();
+
             $table->json('custom')->nullable();
 
             // Time related information about the order

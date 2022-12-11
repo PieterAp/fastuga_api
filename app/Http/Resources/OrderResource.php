@@ -24,6 +24,8 @@ class OrderResource extends JsonResource
             case 'driver':
                 $data = [
                     'customer_id' => $this->customer_id,
+                    'order_id' => $this->id,
+                    'delivery_time' => $this->delivery_time,
                 ];
                 return $data;
                 
@@ -36,6 +38,7 @@ class OrderResource extends JsonResource
                     'pickup_address' => $this->pickup_address,
                     'delivery_address' => $this->delivery_address,
                     'delivery_distance' => $this->delivery_distance,
+                    'delivery_time' => $this->delivery_time,
                     'delivered_by' => $this->delivered_by,
                     'created_at' => $this->created_at,
                 ];
