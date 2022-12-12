@@ -74,7 +74,7 @@ class UserController extends Controller
     public function getActiveOrders(Request $request)
     {
         $user = $request->user();
-        $data = Order::where('delivered_by', $user->id)->get();
+        $data = Order::where('delivered_by', $user->id)->where('status','!=','C')->get();
         return UserResource::collection($data);
     }
 
