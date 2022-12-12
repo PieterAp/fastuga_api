@@ -79,6 +79,9 @@ class AuthenticationController extends Controller
             ], 401);
         }
 
+        $email = $request->input('email');
+        $name = User::where('email',$email)->first()->name;
+
         // LOGIN SUCESSFULL
         $request = Request::create(
             '/oauth/token',
@@ -87,9 +90,13 @@ class AuthenticationController extends Controller
         );
 
         $response = app()->handle($request);
-        $auth_server_response = json_decode((string) $response->content(), true);
 
-        return $auth_server_response;
+        $responseObject = json_decode((string) $response->content(), true);
+        $responseObject['name'] = $name;
+        $responseObject['email'] = $email;
+
+
+        return $responseObject;
     }
 
     public function register(Request $request)
