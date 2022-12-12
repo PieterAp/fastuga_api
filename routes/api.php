@@ -42,6 +42,12 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('drivers', DriverController::class);
     //change password
     Route::put('/users/{user}/changePassword', [UserController::class, 'changePassword']);
+
+    //Product
+    Route::put('products/{product}', [ProductController::class, 'update']);
+    Route::post('products/', [ProductController::class, 'store']);
+
+
 });
 
  //ALL products CRUD
