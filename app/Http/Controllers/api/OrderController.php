@@ -120,16 +120,6 @@ class OrderController extends Controller
             }
         }
         
-        //
-
-        if ($request->delivered_by=="null") {
-            $order->fill($request->all());
-            $order['delivered_by']=null;
-            $order->save();
-            return new OrderResource($order);
-        }
-
-
         if ($request->delivered_by=="null") {
             $order->fill($request->all());
             $order['delivered_by']=null;
