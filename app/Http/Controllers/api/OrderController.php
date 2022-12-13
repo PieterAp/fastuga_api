@@ -38,7 +38,7 @@ class OrderController extends Controller
         $user = $request->user();
         $driver = Driver::where('user_id', $user->id)->first();
         //$order = $request->order();
-        $order = Order::where('delivered_by', $driver->user_id)->where('status','==','D')->get();
+        $order = Order::where('delivered_by', $driver->user_id)->where('status','=','D')->get();
         return OrderResource::collection($order);
     }
 
