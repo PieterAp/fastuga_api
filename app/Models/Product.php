@@ -31,4 +31,12 @@ class Product extends Model
         'photo_url',
     ];
 
+    public function assignedOrders(){
+        return $this->belongsToMany(Order::class, 'order_items');
+    }
+
+    public function assignedUsers(){
+        return $this->belongsToMany(User::class, 'order_items')
+    }
+
 }

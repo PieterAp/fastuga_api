@@ -16,4 +16,15 @@ class Customer extends Model
      */
     protected $table = 'customers';
 
+    //$fillable
+
+    public function orders(){
+        return $this->hasMany(Order::class, 'customer_id');
+    }
+
+
+    public function users(){
+        return $this->belongsTo(User::class , 'user_id');
+    }
+
 }

@@ -29,4 +29,17 @@ class Order extends Model
         'created_at'
     ];
 
+    public function assignedProducts(){
+        return $this->belongsToMany(Product::class, 'order_items');
+    }
+
+    public function customer(){
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
+    public function userDelivery(){
+        return $this->belongsTo(User::class, 'delivery_id');
+    }
+
+
 }
