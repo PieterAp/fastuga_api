@@ -36,7 +36,7 @@ class Product extends Model
     }
 
     public function assignedUsers(){
-        return $this->belongsToMany(User::class, 'order_items')
+        return $this->belongsToMany(User::class, 'order_items');
     }
 
 }
