@@ -30,8 +30,18 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        $product = new Product();
+        if ($request->photo) {
+            $upload_path = public_path('storage/products');
+            $generated_new_name = time() . '.' . $request->photo->getClientOriginalExtension();
+            $request->photo->move($upload_path, $generated_new_name);
+            $data = $request->all();
+            $product = new Product();
+            $product['photo_url'] = $generated_new_name;
+        } else {
+            $data = $request->all();
+            $product = new Product();
+        }
+
         $product->fill($data);
         $product->save();
         return new ProductResource($product);
@@ -57,7 +67,15 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $product->fill($request->all());
+        if ($request->photo) {
+            $upload_path = public_path('storage/products');
+            $generated_new_name = time() . '.' . $request->photo->getClientOriginalExtension();
+            $request->photo->move($upload_path, $generated_new_name);
+            $product->fill($request->all());
+            $product['photo_url'] = $generated_new_name;
+        } else {
+            $product->fill($request->all());
+        }
         $product->save();
         return new ProductResource($product);
     }

@@ -59,7 +59,7 @@ class UserController extends Controller
             ], 400);
         }
 
-        if (Hash::check($request->current_password,$user['password'])) {
+        if (Hash::check($request->current_password, $user['password'])) {
             $user['password'] = bcrypt($request->password);
             $user->save();
             return new UserResource($user);
@@ -74,7 +74,7 @@ class UserController extends Controller
     public function getActiveOrders(Request $request)
     {
         $user = $request->user();
-        $data = Order::where('delivered_by', $user->id)->where('status','!=','C')->where('status','!=','D')->get();
+        $data = Order::where('delivered_by', $user->id)->where('status', '!=', 'C')->where('status', '!=', 'D')->get();
         return UserResource::collection($data);
     }
 
@@ -100,9 +100,25 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        $user = new User();
-        $user->fill($data);
+        if ($request->photo) {
+            $upload_path = public_path('storage/fotos');
+            $generated_new_name = time() . '.' . $request->photo->getClientOriginalExtension();
+            $request->photo->move($upload_path, $generated_new_name);
+
+            $data = $request->all();
+            $user = new User();
+            $user->fill($data);
+            $user['photo_url'] = $generated_new_name;
+        } else {
+            $data = $request->all();
+            $user = new User();
+            $user->fill($data);
+        }
+
+        if ($request->password) {
+            $user['password'] = bcrypt($request->password);
+        }
+
         $user->save();
         return new UserResource($user);
     }
@@ -127,8 +143,19 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $user->fill($request->all());
-        $user['password'] = bcrypt($request->password);
+        if ($request->photo) {
+            $upload_path = public_path('storage/fotos');
+            $generated_new_name = time() . '.' . $request->photo->getClientOriginalExtension();
+            $request->photo->move($upload_path, $generated_new_name);
+            $user->fill($request->all());
+            $user['photo_url'] = $generated_new_name;
+        } else {
+            $user->fill($request->all());
+        }
+        if ($request->password) {
+            $user['password'] = bcrypt($request->password);
+        }
+
         $user->save();
         return new UserResource($user);
     }
