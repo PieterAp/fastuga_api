@@ -80,23 +80,17 @@ return new class extends Migration
             // null if order was not delivered (status != "D")
             $table->bigInteger('delivered_by')->unsigned()->nullable();
             $table->foreign('delivered_by')->references('id')->on('users');
-
             // pickup address
             $table->string('pickup_address')->nullable();
             // delivery address
             $table->string('delivery_address')->nullable();
-
             // calculated distance
             $table->decimal('delivery_distance')->nullable();
-
             // calculate time
             $table->decimal('delivery_time')->nullable();
-
             $table->json('custom')->nullable();
-
             // Time related information about the order
             $table->timestamps();
-
             // Index by date & by status for faster queries
             $table->index('date');
             $table->index('status');

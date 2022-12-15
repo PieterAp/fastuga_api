@@ -22,11 +22,13 @@ class Order extends Model
         'total_paid_with_points',
         'points_gained',
         'points_used_to_pay',
+        'payment_type',
+        'payment_reference',
         'date',
-        //
         'total_paid',
         'customer_id',
         'status',
+        //
         'delivery_address',
         'pickup_address',
         'delivery_distance',
