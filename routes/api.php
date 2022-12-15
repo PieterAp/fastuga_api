@@ -7,6 +7,7 @@ use App\Http\Controllers\api\CustomerController;
 use App\Http\Controllers\api\OrderController;
 use App\Http\Controllers\api\DriverController;
 use App\Http\Controllers\api\ProductController;
+use App\Http\Controllers\api\OrderItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,18 +37,17 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('users', UserController::class);
     //ALL orders CRUD
     Route::apiResource('orders', OrderController::class);
+    //ALL order item CRUD
+    Route::apiResource('ordersItems', OrderItemController::class);
     //ALL customers CRUD
     Route::apiResource('customers', CustomerController::class);
     //ALL drivers CRUD
     Route::apiResource('drivers', DriverController::class);
     //change password
     Route::put('/users/{user}/changePassword', [UserController::class, 'changePassword']);
-
     //Product
     Route::put('products/{product}', [ProductController::class, 'update']);
     Route::post('products/', [ProductController::class, 'store']);
-
-
 });
 
  //ALL products CRUD

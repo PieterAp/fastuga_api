@@ -17,8 +17,14 @@ class Order extends Model
     protected $table = 'orders';
 
     protected $fillable = [
-        //to be possible to associate
-        //customer to an order
+        'ticket_number',
+        'total_price',
+        'total_paid_with_points',
+        'points_gained',
+        'points_used_to_pay',
+        'date',
+        //
+        'total_paid',
         'customer_id',
         'status',
         'delivery_address',

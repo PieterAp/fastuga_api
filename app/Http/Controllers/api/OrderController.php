@@ -62,7 +62,6 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        //calculate delivery_distance
         $order = new Order();
         $order->fill($data);
         $order->save();

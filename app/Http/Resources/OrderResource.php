@@ -33,12 +33,9 @@ class OrderResource extends JsonResource
                 $data = [
                     'id' => $this->id,
                     'status' => $this->status,
+                    'date' => $this->date,
                     'customer_name' => $this->customer_name,
                     'ticket_number' => $this->ticket_number,
-                    'pickup_address' => $this->pickup_address,
-                    'delivery_address' => $this->delivery_address,
-                    'delivery_distance' => $this->delivery_distance,
-                    'delivery_time' => $this->delivery_time,
                     'delivered_by' => $this->delivered_by,
                     'created_at' => $this->created_at,
                 ];
