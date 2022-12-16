@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderItemResource;
 use App\Models\OrderItem;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -74,6 +75,7 @@ class OrderItemController extends Controller
     {
         $ordersItem->fill($request->all());
         $ordersItem->save();
+        $ordersItem['userName'] = User::where('id','=',$ordersItem->preparation_by)->first()->name;
         return new OrderItemResource($ordersItem);
     }
 
