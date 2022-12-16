@@ -19,10 +19,14 @@ class OrderItemResource extends JsonResource
             'order_id' => $this->order_id,
             'order_local_number' => $this->order_local_number,
             'product_id' => $this->product_id,
+            'product_name' => $this->name,
             'price' => $this->price,
             'status' => $this->status,
-            'preparation_by' => $this->preparation_by,
+            'preparation_by' => $this->userName,
             'notes' => $this->notes,
+            'product_photo_url' => $this->photo_url,
+            'order_ticket_number' => $this->ticket_number,
+            'created_at' => $this->created_at,
         ];
 
         return $data;   

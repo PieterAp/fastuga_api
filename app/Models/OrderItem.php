@@ -24,6 +24,8 @@ class OrderItem extends Model
         'order_local_number',
         'product_id',
         'price',
+        'preparation_by',
+        'status',
     ];
 
 

@@ -39,6 +39,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('orders', OrderController::class);
     //ALL order item CRUD
     Route::apiResource('ordersItems', OrderItemController::class);
+    Route::get('/chefs/ordersItems/', [OrderItemController::class, 'chefIndex']);
     //ALL customers CRUD
     Route::apiResource('customers', CustomerController::class);
     //ALL drivers CRUD

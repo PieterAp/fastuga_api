@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderItemResource;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderItemController extends Controller
 {
@@ -19,6 +20,21 @@ class OrderItemController extends Controller
     public function index()
     {
         return OrderItemResource::collection(OrderItem::all());
+    }
+
+    public function chefIndex()
+    {
+        $items = DB::table('order_items')
+            ->join('products', 'order_items.product_id', '=', 'products.id')
+            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->join('users', 'order_items.preparation_by', '=', 'users.id')
+            ->where('products.type','=','hot dish')
+            ->where('orders.status','!=','D')
+            ->where('orders.status','!=','C')
+            ->select('order_items.*','products.name','products.photo_url','orders.ticket_number','orders.created_at','users.name as userName')
+            ->get();
+
+        return OrderItemResource::collection($items);
     }
 
     /**
@@ -42,9 +58,9 @@ class OrderItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(OrderItem $orderItem)
+    public function show(OrderItem $ordersItem)
     {
-        return new OrderItemResource($orderItem);
+        return new OrderItemResource($ordersItem);
     }
 
     /**
@@ -54,11 +70,11 @@ class OrderItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,OrderItem $orderItem)
+    public function update(Request $request,OrderItem $ordersItem)
     {
-        $orderItem->fill($request->all());
-        $orderItem->save();
-        return new OrderItemResource($orderItem);
+        $ordersItem->fill($request->all());
+        $ordersItem->save();
+        return new OrderItemResource($ordersItem);
     }
 
     /**
@@ -67,9 +83,9 @@ class OrderItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(OrderItem $customer)
+    public function destroy(OrderItem $ordersItem)
     {
-        $customer->delete();
-        return new OrderItemResource($customer);
+        $ordersItem->delete();
+        return new OrderItemResource($ordersItem);
     }
 }
