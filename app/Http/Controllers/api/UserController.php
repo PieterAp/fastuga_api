@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -25,8 +26,13 @@ class UserController extends Controller
 
     public function getProfile(Request $request)
     {
-        $data = $request->user();
-        return $data;
+        $user = $request->user();
+        if($user->type=="C"){
+           $points = Customer::where('user_id','=',$user->id)->first()->points;
+           $user['points'] = $points ;
+        }
+
+        return new UserResource($user);
     }
 
     public function changePassword(Request $request, User $user)
@@ -65,7 +71,7 @@ class UserController extends Controller
         ], 400);
     }
 
-
+    
     public function editProfile(Request $request)
     {
         $user = $request->user();
