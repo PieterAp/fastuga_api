@@ -36,18 +36,6 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('drivers', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->string('phone', 13);
-            $table->string('license_plate', 8);
-            $table->decimal('balance')->nullable();
-            $table->json('custom')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
@@ -63,11 +51,10 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->integer('ticket_number');
-            $table->enum('status', ['P', 'R', 'O', 'D', 'C']);
-            // P "Preparing", R "Ready", O "onRoute", D "Delivered", C "Cancelled"
+            $table->enum('status', ['P', 'R', 'D', 'C']);
+            // P "Preparing", R "Ready", D "Delivered", C "Cancelled"
             $table->bigInteger('customer_id')->unsigned()->nullable();
             $table->foreign('customer_id')->references('id')->on('customers');
-            $table->string('customer_name')->nullable();
             $table->decimal('total_price', 8, 2);
             $table->decimal('total_paid', 8, 2);
             $table->decimal('total_paid_with_points', 8, 2);
@@ -75,19 +62,11 @@ return new class extends Migration
             $table->integer('points_used_to_pay');
             $table->enum('payment_type', ['VISA', 'PAYPAL', 'MBWAY'])->nullable();
             $table->string('payment_reference')->nullable();
-            $table->date('date');                          // Order date (only the day)
+            $table->date('date'); // Order date (only the day)
             // The Employee that delivered the order
             // null if order was not delivered (status != "D")
             $table->bigInteger('delivered_by')->unsigned()->nullable();
             $table->foreign('delivered_by')->references('id')->on('users');
-            // pickup address
-            $table->string('pickup_address')->nullable();
-            // delivery address
-            $table->string('delivery_address')->nullable();
-            // calculated distance
-            $table->decimal('delivery_distance')->nullable();
-            // calculate time
-            $table->decimal('delivery_time')->nullable();
             $table->json('custom')->nullable();
             // Time related information about the order
             $table->timestamps();

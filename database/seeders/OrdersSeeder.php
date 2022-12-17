@@ -105,12 +105,9 @@ class OrdersSeeder extends Seeder
 
         $customerId = rand(0, 5) == 1 ? Arr::random($this->customerIDs) : null;
         if ($customerId) {
-            $user = DB::table('users')->where('id',$this->customerDetails[$customerId]->user_id)->first();
-            $customerName = $user->name;
             $paymentType = $this->customerDetails[$customerId]->default_payment_type;
             $paymentRef = $this->customerDetails[$customerId]->default_payment_reference;
         } else {
-            $customerName = null;
             $paymentType = $faker->randomElement($this->paymentTypes);
             $paymentRef = UsersSeeder::getRandomPaymentReference($faker, $paymentType);
         }
@@ -119,7 +116,6 @@ class OrdersSeeder extends Seeder
         return [
             'status' => $status,
             'customer_id' => $customerId,
-            'customer_name' => $customerName,
             'ticket_number' => $orderNumberOfDay % 99 + 1,
             'total_price' => 0,
             'total_paid' => 0,

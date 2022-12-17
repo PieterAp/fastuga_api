@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\DriverResource;
 use App\Http\Resources\UserResource;
-use App\Models\Driver;
-use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -29,9 +26,6 @@ class UserController extends Controller
     public function getProfile(Request $request)
     {
         $data = $request->user();
-        if ($data['type'] == "ED") {
-            return new DriverResource($data);
-        }
         return $data;
     }
 
@@ -71,12 +65,6 @@ class UserController extends Controller
         ], 400);
     }
 
-    public function getActiveOrders(Request $request)
-    {
-        $user = $request->user();
-        $data = Order::where('delivered_by', $user->id)->where('status', '!=', 'C')->where('status', '!=', 'D')->get();
-        return UserResource::collection($data);
-    }
 
     public function editProfile(Request $request)
     {
@@ -86,10 +74,8 @@ class UserController extends Controller
             $user['password'] = bcrypt($request->password);
         }
         $user->save();
-        $driver = Driver::where('user_id', $user->id)->first();
-        $driver->fill($request->all());
-        $driver->save();
-        return new DriverResource($user);
+    
+        return new UserResource($user);
     }
 
     /**
