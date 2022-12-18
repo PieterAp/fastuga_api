@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderItemResource;
 use App\Models\OrderItem;
+use App\Models\Product;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,12 +32,12 @@ class OrderItemController extends Controller
             ->join('products', 'order_items.product_id', '=', 'products.id')
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
             ->leftJoin('users', 'order_items.preparation_by', '=', 'users.id')
-            ->where('products.type','=','hot dish')
-            ->where('orders.status','!=','D')
-            ->where('orders.status','!=','C')
-            ->select('order_items.*','products.name','products.photo_url','orders.ticket_number','orders.created_at','users.name as userName')
+            ->where('products.type', '=', 'hot dish')
+            ->where('orders.status', '!=', 'D')
+            ->where('orders.status', '!=', 'C')
+            ->select('order_items.*', 'products.name', 'products.photo_url', 'orders.ticket_number', 'orders.created_at', 'users.name as userName')
             ->get();
-            
+
         return OrderItemResource::collection($items);
     }
 
@@ -49,7 +52,21 @@ class OrderItemController extends Controller
         $data = $request->all();
         $orderItem = new OrderItem();
         $orderItem->fill($data);
+
+        $product = Product::where('id', '=', $request->product_id)->first();
+        $order = Order::where('id', '=', $request->order_id)->first();
+
+        if ($product->type == 'hot dish') {
+            $orderItem['status'] = 'W';
+        } else {
+            $orderItem['status'] = 'R';
+        }
+
         $orderItem->save();
+        $orderItem['photo_url'] = $product->photo_url;
+        $orderItem['name'] = $product->name;
+        $orderItem['created_at'] = $order->created_at;
+        $orderItem['ticket_number'] = $order->ticket_number;
         return new OrderItemResource($orderItem);
     }
 
@@ -71,11 +88,11 @@ class OrderItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,OrderItem $ordersItem)
+    public function update(Request $request, OrderItem $ordersItem)
     {
         $ordersItem->fill($request->all());
         $ordersItem->save();
-        $ordersItem['userName'] = User::where('id','=',$ordersItem->preparation_by)->first()->name;
+        $ordersItem['userName'] = User::where('id', '=', $ordersItem->preparation_by)->first()->name;
         return new OrderItemResource($ordersItem);
     }
 
