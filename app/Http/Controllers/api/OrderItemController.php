@@ -35,7 +35,7 @@ class OrderItemController extends Controller
             ->where('products.type', '=', 'hot dish')
             ->where('orders.status', '!=', 'D')
             ->where('orders.status', '!=', 'C')
-            ->select('order_items.*', 'products.name', 'products.photo_url', 'orders.ticket_number', 'orders.created_at', 'users.name as userName')
+            ->select('order_items.*', 'products.name', 'products.type','products.photo_url', 'orders.ticket_number', 'orders.created_at', 'users.name as userName')
             ->get();
 
         return OrderItemResource::collection($items);
@@ -64,6 +64,7 @@ class OrderItemController extends Controller
 
         $orderItem->save();
         $orderItem['photo_url'] = $product->photo_url;
+        $orderItem['type'] = $product->type;
         $orderItem['name'] = $product->name;
         $orderItem['created_at'] = $order->created_at;
         $orderItem['ticket_number'] = $order->ticket_number;

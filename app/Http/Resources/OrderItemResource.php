@@ -23,6 +23,7 @@ class OrderItemResource extends JsonResource
             'price' => $this->price,
             'status' => $this->status,
             'preparation_by' => $this->userName,
+            'product_type' => $this->type,
             'notes' => $this->notes,
             'product_photo_url' => $this->photo_url,
             'order_ticket_number' => $this->ticket_number,
