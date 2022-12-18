@@ -29,6 +29,8 @@ class OrderResource extends JsonResource
                     'ticket_number' => $this->ticket_number,
                     'payment_type'=> $this->payment_type,
                     'payment_reference' => $this->payment_reference,
+                    'points_gained'=> $this->points_gained,
+                    'points_used_to_pay'=> $this->points_used_to_pay,
                     'delivered_by' => $this->delivered_by,
                     'created_at' => $this->created_at,
                 ];

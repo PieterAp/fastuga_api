@@ -28,13 +28,13 @@ class OrderItemController extends Controller
         $items = DB::table('order_items')
             ->join('products', 'order_items.product_id', '=', 'products.id')
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
-            ->join('users', 'order_items.preparation_by', '=', 'users.id')
+            ->leftJoin('users', 'order_items.preparation_by', '=', 'users.id')
             ->where('products.type','=','hot dish')
             ->where('orders.status','!=','D')
             ->where('orders.status','!=','C')
             ->select('order_items.*','products.name','products.photo_url','orders.ticket_number','orders.created_at','users.name as userName')
             ->get();
-
+            
         return OrderItemResource::collection($items);
     }
 

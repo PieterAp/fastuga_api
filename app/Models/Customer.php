@@ -17,6 +17,13 @@ class Customer extends Model
     protected $table = 'customers';
 
     //$fillable
+    protected $fillable = [
+        'points',
+        'default_payment_type',
+        'default_payment_reference',
+        'nif',
+        'phone'
+    ];
 
     public function orders(){
         return $this->hasMany(Order::class, 'customer_id');
