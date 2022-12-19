@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -132,8 +133,15 @@ class AuthenticationController extends Controller
 
         $data['password'] = bcrypt($request->password);
 
-        User::create($data);
+        $user = User::create($data);
 
+        $dataCustomer = array(
+            'user_id' => $user->id,    
+            'points' => "0",    
+            'phone' => $request->input('phone'),            
+        );
+
+        Customer::create($dataCustomer); 
         return response()->json(['success' => 'success'], 200);
     }
 

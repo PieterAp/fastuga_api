@@ -19,10 +19,11 @@ class Customer extends Model
     //$fillable
     protected $fillable = [
         'points',
+        'user_id',
         'default_payment_type',
         'default_payment_reference',
         'nif',
-        'phone'
+        'phone',
     ];
 
     public function orders(){

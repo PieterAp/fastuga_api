@@ -28,8 +28,12 @@ class UserController extends Controller
     {
         $user = $request->user();
         if($user->type=="C"){
-           $points = Customer::where('user_id','=',$user->id)->first()->points;
-           $user['points'] = $points ;
+           $customer = Customer::where('user_id','=',$user->id)->first();
+           $user['points'] = $customer->points;
+           $user['nif'] = $customer->nif;
+           $user['phone'] = $customer->phone;
+           $user['default_payment_type'] = $customer->default_payment_type;
+           $user['default_payment_reference'] = $customer->default_payment_reference;
         }
 
         return new UserResource($user);
@@ -70,7 +74,6 @@ class UserController extends Controller
             'message' => 'The current password is incorrect',
         ], 400);
     }
-
     
     public function editProfile(Request $request)
     {
@@ -146,6 +149,12 @@ class UserController extends Controller
         }
         if ($request->password) {
             $user['password'] = bcrypt($request->password);
+        }
+
+        if($user->type=="C"){
+            $customer = Customer::where('user_id','=',$user->id)->first();
+            $customer->fill($request->all());
+            $customer->save();
         }
 
         $user->save();
