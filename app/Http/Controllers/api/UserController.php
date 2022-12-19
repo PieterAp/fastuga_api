@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::all());
+        return UserResource::collection(User::withTrashed()->get());
     }
 
     public function getProfile(Request $request)
@@ -126,7 +126,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return new UserResource($user);
+        $userD = User::withTrashed()->find($user)->first();
+        return new UserResource($userD);
     }
 
     /**
