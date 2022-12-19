@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OrderItemResource;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -56,6 +58,12 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
+    public function orderItems(Order $order)
+    {
+        $items = OrderItem::where('order_id','=',$order->id)->get();
+        return OrderItemResource::collection($items);
+    }
+    
     /**
      * Update the specified resource in storage.
      *
