@@ -55,7 +55,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $productF = Product::withTrashed()->find($product);
+        $productF = Product::withTrashed()->find($product)->first();
         return new ProductResource($productF);
     }
 
