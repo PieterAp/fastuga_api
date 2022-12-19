@@ -41,6 +41,8 @@ Route::middleware('auth:api')->group(function () {
     //Product
     Route::put('products/{product}', [ProductController::class, 'update']);
     Route::post('products/', [ProductController::class, 'store']);
+
+    Route::get('/orders/{order}/ordersItems', [OrderController::class, 'orderItems']);
 });
 
  //ALL products CRUD
