@@ -47,6 +47,7 @@ Route::middleware('auth:api')->group(function () {
 
 });
 
+Route::post('orders', [OrderController::class, 'store']);
 Route::get('products/', [ProductController::class, 'index']);
 Route::post('auth/login', [AuthenticationController::class, 'login']);
 Route::post('auth/register', [AuthenticationController::class, 'register']);
