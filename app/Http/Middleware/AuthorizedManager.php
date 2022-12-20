@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class AuthorizedManager
 {
@@ -22,6 +23,6 @@ class AuthorizedManager
 
     protected function isManager($request)
     {
-        return $request->user()->type == 'EM';
+        return  Auth::user()->type == 'EM';
     }
 }

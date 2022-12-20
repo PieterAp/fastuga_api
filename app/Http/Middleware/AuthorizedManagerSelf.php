@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AuthorizedManagerSelf{
 
@@ -22,7 +23,7 @@ class AuthorizedManagerSelf{
 
     protected function isManagerSelf($request,User $user)
     {
-        if($request->user()->id == $user->id || $request->user()->type == "EM"){
+        if(Auth::user()->id == $user->id || Auth::user()->type == 'EM'){
             return true;
         }else{
             return false;

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class AuthorizedExceptCustomers{
 
@@ -21,6 +22,6 @@ class AuthorizedExceptCustomers{
 
     protected function isNotCustomer($request)
     {
-        return $request->user()->type != 'C';
+        return  Auth::user()->type != 'C';
     }
 }
