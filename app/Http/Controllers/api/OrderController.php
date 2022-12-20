@@ -8,6 +8,7 @@ use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -37,7 +38,7 @@ class OrderController extends Controller
         $data = $request->all();
         $order = new Order();
         $order->fill($data);
-        $latestOrderTicketNumber = Order::orderBy('created_at','DESC')->first()->ticket_number;
+        $latestOrderTicketNumber = Order::orderBy('id','DESC')->first()->ticket_number ;   
         if($latestOrderTicketNumber=='99'){
             $order['ticket_number'] = 1;
         }else{
@@ -60,7 +61,16 @@ class OrderController extends Controller
 
     public function orderItems(Order $order)
     {
-        $items = OrderItem::where('order_id','=',$order->id)->get();
+
+        $items = DB::table('order_items')              
+        ->join('orders', 'order_items.order_id', '=', 'orders.id')  
+        ->join('products', 'order_items.product_id', '=', 'products.id')  
+        ->leftJoin('users', 'order_items.preparation_by', '=', 'users.id')
+        ->where('order_items.order_id', '=', $order->id)       
+        ->where('orders.status', '!=', 'R')      
+        ->select('order_items.*', 'products.name', 'products.type','products.photo_url', 'orders.ticket_number', 'orders.created_at', 'users.name as userName')
+        ->get();
+
         return OrderItemResource::collection($items);
     }
     

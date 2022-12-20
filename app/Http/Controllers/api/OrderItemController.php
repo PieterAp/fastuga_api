@@ -33,8 +33,7 @@ class OrderItemController extends Controller
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
             ->leftJoin('users', 'order_items.preparation_by', '=', 'users.id')
             ->where('products.type', '=', 'hot dish')
-            ->where('orders.status', '!=', 'D')
-            ->where('orders.status', '!=', 'C')
+            ->where('orders.status', '=', 'P')      
             ->select('order_items.*', 'products.name', 'products.type','products.photo_url', 'orders.ticket_number', 'orders.created_at', 'users.name as userName')
             ->get();
 
