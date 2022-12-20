@@ -21,6 +21,20 @@ use App\Http\Controllers\api\OrderItemController;
 
 Route::middleware('auth:api')->group(function () {
 
+    Route::get('/users/profile', [UserController::class, 'getProfile']);
+    Route::post('auth/logout', [AuthenticationController::class, 'logout']);
+    Route::put('/users/{user}/changePassword', [UserController::class, 'changePassword']);
+
+    Route::middleware('notCustomer')->group(function () {
+
+        Route::apiResource('orders', OrderController::class);
+        Route::apiResource('ordersItems', OrderItemController::class);
+        Route::apiResource('customers', CustomerController::class);
+        Route::get('/chefs/ordersItems/', [OrderItemController::class, 'chefIndex']);
+        Route::get('/orders/{order}/ordersItems', [OrderController::class, 'orderItems']);
+
+    });
+ 
     Route::middleware('manager')->group(function () {
 
         Route::apiResource('users', UserController::class);
@@ -28,20 +42,8 @@ Route::middleware('auth:api')->group(function () {
         Route::post('products/', [ProductController::class, 'store']);
         Route::delete('products/{product}', [ProductController::class, 'destroy']);
         Route::get('products/{product}', [ProductController::class, 'show']);
+
     });
-
-    Route::middleware('notCustomer')->group(function () {
-
-        Route::apiResource('orders', OrderController::class);
-        Route::apiResource('ordersItems', OrderItemController::class);
-        Route::get('/chefs/ordersItems/', [OrderItemController::class, 'chefIndex']);
-        Route::apiResource('customers', CustomerController::class);        
-        Route::get('/orders/{order}/ordersItems', [OrderController::class, 'orderItems']);
-    });
-
-    Route::put('/users/{user}/changePassword', [UserController::class, 'changePassword']);
-    Route::post("auth/logout", [AuthenticationController::class, 'logout']);
-    Route::get('/users/profile', [UserController::class, 'getProfile']);
 
 });
 
