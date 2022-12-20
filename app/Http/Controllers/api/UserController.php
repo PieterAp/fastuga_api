@@ -127,6 +127,16 @@ class UserController extends Controller
     public function show(User $user)
     {
         $userD = User::withTrashed()->find($user)->first();
+
+        if($userD->type=="C"){
+            $customer = Customer::where('user_id','=',$userD->id)->first();
+            $userD['points'] = $customer->points;
+            $userD['nif'] = $customer->nif;
+            $userD['phone'] = $customer->phone;
+            $userD['default_payment_type'] = $customer->default_payment_type;
+            $userD['default_payment_reference'] = $customer->default_payment_reference;
+         }
+
         return new UserResource($userD);
     }
 
