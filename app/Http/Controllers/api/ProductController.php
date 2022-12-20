@@ -54,9 +54,8 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Product $product)
-    {
-        $productF = Product::withTrashed()->find($product)->first();
-        return new ProductResource($productF);
+    {                       
+        return new ProductResource($product);
     }
 
     /**

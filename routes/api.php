@@ -24,6 +24,11 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/users/profile', [UserController::class, 'getProfile']);
     Route::post('auth/logout', [AuthenticationController::class, 'logout']);
     Route::put('/users/{user}/changePassword', [UserController::class, 'changePassword']);
+    Route::post('ordersItems', [OrderItemController::class,'store']);
+   
+    Route::middleware('managerSelf')->group(function () {
+        Route::get('/users/{user}', [UserController::class, 'show']);
+    });
 
     Route::middleware('notCustomer')->group(function () {
 
