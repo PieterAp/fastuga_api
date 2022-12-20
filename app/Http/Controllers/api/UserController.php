@@ -74,19 +74,7 @@ class UserController extends Controller
             'message' => 'The current password is incorrect',
         ], 400);
     }
-    
-    public function editProfile(Request $request)
-    {
-        $user = $request->user();
-        $user->fill($request->all());
-        if ($request->password != null) {
-            $user['password'] = bcrypt($request->password);
-        }
-        $user->save();
-    
-        return new UserResource($user);
-    }
-
+      
     /**
      * Store a newly created resource in storage.
      *
