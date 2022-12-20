@@ -24,11 +24,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/users/profile', [UserController::class, 'getProfile']);
     Route::post('auth/logout', [AuthenticationController::class, 'logout']);
     Route::put('/users/{user}/changePassword', [UserController::class, 'changePassword']);
-    Route::post('ordersItems', [OrderItemController::class,'store']);
-   
-    Route::middleware('managerSelf')->group(function () {
-        Route::get('/users/{user}', [UserController::class, 'show']);
-    });
 
     Route::middleware('notCustomer')->group(function () {
 
@@ -37,9 +32,18 @@ Route::middleware('auth:api')->group(function () {
         Route::apiResource('customers', CustomerController::class);
         Route::get('/chefs/ordersItems/', [OrderItemController::class, 'chefIndex']);
         Route::get('/orders/{order}/ordersItems', [OrderController::class, 'orderItems']);
-
     });
- 
+
+    Route::middleware('managerSelf')->group(function () {
+        Route::get('/users/{user}', [UserController::class, 'show']);
+    });
+
+    Route::middleware('managerSelfCustomer')->group(function () {
+        Route::put('/customers/{customer}', [CustomerController::class, 'update']);
+    });
+
+    Route::post('ordersItems', [OrderItemController::class, 'store']);
+
     Route::middleware('manager')->group(function () {
 
         Route::apiResource('users', UserController::class);
@@ -47,9 +51,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('products/', [ProductController::class, 'store']);
         Route::delete('products/{product}', [ProductController::class, 'destroy']);
         Route::get('products/{product}', [ProductController::class, 'show']);
-
     });
-
 });
 
 Route::post('orders', [OrderController::class, 'store']);
