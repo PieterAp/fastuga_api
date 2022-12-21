@@ -30,9 +30,11 @@ Route::middleware('auth:api')->group(function () {
         Route::apiResource('orders', OrderController::class);
         Route::apiResource('ordersItems', OrderItemController::class);
         Route::apiResource('customers', CustomerController::class);
-        Route::get('/chefs/ordersItems/', [OrderItemController::class, 'chefIndex']);
-        Route::get('/orders/{order}/ordersItems', [OrderController::class, 'orderItems']);
+        Route::get('/chefs/ordersItems/', [OrderItemController::class, 'chefIndex']);       
+
     });
+
+    Route::get('/orders/{order}/ordersItems', [OrderController::class, 'orderItems']);
     
     Route::middleware('managerSelfCustomer')->group(function () {
         Route::put('/customers/{customer}', [CustomerController::class, 'update']);

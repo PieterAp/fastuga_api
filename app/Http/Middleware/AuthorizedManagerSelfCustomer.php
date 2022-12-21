@@ -13,7 +13,9 @@ class AuthorizedManagerSelfCustomer{
         if (!$this->isManagerSelfCustomer($request)) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Unauthorized',            
+                'message' => 'Unauthorized', 
+                'auth' => Auth::user() ,                        
+                'request' => $request->route()->parameter('customer'),     
             ], 401);
         }
 
@@ -22,7 +24,7 @@ class AuthorizedManagerSelfCustomer{
 
     protected function isManagerSelfCustomer($request)
     {
-        if(Auth::user()->id == $request->route()->parameter('customer')->id || Auth::user()->type == 'EM'){
+        if(Auth::user()->id == $request->route()->parameter('customer')->user_id || Auth::user()->type == 'EM'){
             return true;
         }else{
             return false;

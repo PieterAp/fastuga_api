@@ -30,7 +30,7 @@ class UserController extends Controller
            
         if($user->type=="C"){
            $customer = Customer::where('user_id','=',$user->id)->first();
-           $user['id'] = $customer->id;
+           $user['customer_id'] = $customer->id;
            $user['points'] = $customer->points;
            $user['nif'] = $customer->nif;
            $user['phone'] = $customer->phone;

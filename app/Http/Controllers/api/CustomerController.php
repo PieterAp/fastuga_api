@@ -56,7 +56,7 @@ class CustomerController extends Controller
      */
     public function update(Request $request,Customer $customer)
     {
-        $user = Customer::where('user_id','=',$customer->id)->first();
+        $user = Customer::where('user_id','=',$customer->user_id)->first();
         $user->fill($request->all());
         $user->save();
         return new CustomerResource($user);
