@@ -33,7 +33,7 @@ class OrderController extends Controller
         return OrderResource::collection($orders);
     }
 
-    public function orderCustomer(Order $order ,Customer $customer)
+    public function orderCustomer(Customer $customer, Order $order)
     {        
         OrderResource::$format = 'detailed';
         $order = Order::where('customer_id','=',$customer->id)->where('id','=',$order->id)->first();
