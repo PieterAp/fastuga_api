@@ -33,11 +33,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/chefs/ordersItems/', [OrderItemController::class, 'chefIndex']);
         Route::get('/orders/{order}/ordersItems', [OrderController::class, 'orderItems']);
     });
-
-    Route::middleware('managerSelf')->group(function () {
-        Route::get('/users/{user}', [UserController::class, 'show']);
-    });
-
+    
     Route::middleware('managerSelfCustomer')->group(function () {
         Route::put('/customers/{customer}', [CustomerController::class, 'update']);
     });
@@ -51,6 +47,10 @@ Route::middleware('auth:api')->group(function () {
         Route::post('products/', [ProductController::class, 'store']);
         Route::delete('products/{product}', [ProductController::class, 'destroy']);
         Route::get('products/{product}', [ProductController::class, 'show']);
+    });
+
+    Route::middleware('managerSelf')->group(function () {
+        Route::get('/users/{user}', [UserController::class, 'show']);
     });
 });
 
