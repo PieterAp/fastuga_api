@@ -34,8 +34,7 @@ Route::middleware('auth:api')->group(function () {
 
     });
 
-    Route::put('/orders/{order}', [OrderController::class, 'update']);
-    Route::get('/orders/{order}/ordersItems', [OrderController::class, 'orderItems']);
+    Route::put('/orders/{order}', [OrderController::class, 'update']);   
     
     Route::middleware('managerSelfCustomer')->group(function () {
         Route::put('/customers/{customer}', [CustomerController::class, 'update']);
@@ -56,6 +55,7 @@ Route::middleware('auth:api')->group(function () {
     });
 });
 
+Route::get('/orders/{order}/ordersItems', [OrderController::class, 'orderItems']);
 Route::post('ordersItems', [OrderItemController::class, 'store']);
 Route::post('orders', [OrderController::class, 'store']);
 Route::get('products/', [ProductController::class, 'index']);
