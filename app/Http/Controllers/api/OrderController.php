@@ -7,7 +7,6 @@ use App\Http\Resources\OrderItemResource;
 use App\Http\Resources\OrderResource;
 use App\Models\Customer;
 use App\Models\Order;
-use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -34,6 +33,14 @@ class OrderController extends Controller
         return OrderResource::collection($orders);
     }
 
+    public function orderCustomer(Order $order ,Customer $customer)
+    {        
+        OrderResource::$format = 'detailed';
+        $order = Order::where('customer_id','=',$customer->id)->where('id','=',$order->id)->first();
+        return new OrderResource($order);
+    }
+
+    
     /**
      * Store a newly created resource in storage.
      *
