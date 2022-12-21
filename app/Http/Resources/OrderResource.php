@@ -31,6 +31,7 @@ class OrderResource extends JsonResource
                     'payment_reference' => $this->payment_reference,
                     'points_gained'=> $this->points_gained,
                     'points_used_to_pay'=> $this->points_used_to_pay,
+                    'total_paid'=> $this->total_paid,
                     'delivered_by' => $this->delivered_by,
                     'created_at' => $this->created_at,
                 ];
