@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderItemResource;
 use App\Http\Resources\OrderResource;
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
@@ -26,6 +27,12 @@ class OrderController extends Controller
         return OrderResource::collection(Order::all());
     }
 
+    public function indexCustomer(Customer $customer)
+    {
+        OrderResource::$format = 'detailed';
+        $orders = Order::where('customer_id','=',$customer->id)->get();
+        return OrderResource::collection($orders);
+    }
 
     /**
      * Store a newly created resource in storage.

@@ -38,6 +38,7 @@ Route::middleware('auth:api')->group(function () {
     
     Route::middleware('managerSelfCustomer')->group(function () {
         Route::put('/customers/{customer}', [CustomerController::class, 'update']);
+        Route::get('orders/customers/{customer}', [OrderController::class, 'indexCustomer']);
     });
    
     Route::middleware('manager')->group(function () {
