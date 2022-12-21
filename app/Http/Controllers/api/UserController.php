@@ -27,8 +27,10 @@ class UserController extends Controller
     public function getProfile(Request $request)
     {
         $user = $request->user();
+           
         if($user->type=="C"){
            $customer = Customer::where('user_id','=',$user->id)->first();
+           $user['id'] = $customer->user_id;
            $user['points'] = $customer->points;
            $user['nif'] = $customer->nif;
            $user['phone'] = $customer->phone;
