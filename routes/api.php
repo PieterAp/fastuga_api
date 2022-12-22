@@ -54,6 +54,7 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::middleware('managerSelf')->group(function () {
+        Route::put('/users/{user}', [UserController::class, 'update']);
         Route::get('/users/{user}', [UserController::class, 'show']);
     });
 
