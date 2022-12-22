@@ -26,6 +26,20 @@ class OrderController extends Controller
         return OrderResource::collection(Order::all());
     }
 
+    public function activeIndex()
+    {
+        OrderResource::$format = 'detailed';
+        $order = Order::where('status','!=','C')->where('status','!=','D')->get();
+        return OrderResource::collection($order);
+    }
+
+    public function ticketsIndex()
+    {
+        OrderResource::$format = 'detailed';
+        $order = Order::where('status','=','R')->get();
+        return OrderResource::collection($order);
+    }
+        
     public function indexCustomer(Customer $customer)
     {
         OrderResource::$format = 'detailed';
