@@ -27,9 +27,9 @@ Route::middleware('auth:api')->group(function () {
 
     Route::middleware('notCustomer')->group(function () {
 
-        Route::apiResource('orders', OrderController::class);
         Route::get('orders/active', [OrderController::class, 'activeIndex']);
         Route::get('orders/tickets', [OrderController::class, 'ticketsIndex']);
+        Route::apiResource('orders', OrderController::class);  
         Route::apiResource('ordersItems', OrderItemController::class);
         Route::apiResource('customers', CustomerController::class);
         Route::get('/chefs/ordersItems/', [OrderItemController::class, 'chefIndex']);       
