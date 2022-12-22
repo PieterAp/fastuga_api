@@ -33,13 +33,12 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/chefs/ordersItems/', [OrderItemController::class, 'chefIndex']);       
 
     });
-
-    Route::put('/orders/{order}', [OrderController::class, 'update']);  
-         
+             
     Route::middleware('managerSelfCustomer')->group(function () {
         Route::put('/customers/{customer}', [CustomerController::class, 'update']);
         Route::get('orders/customers/{customer}', [OrderController::class, 'indexCustomer']);
-        Route::get('/customers/{customer}/orders/{order}', [OrderController::class, 'orderCustomer']);   
+        Route::get('/customers/{customer}/orders/{order}', [OrderController::class, 'orderCustomer']);  
+
     });
    
     Route::middleware('manager')->group(function () {
@@ -49,13 +48,16 @@ Route::middleware('auth:api')->group(function () {
         Route::post('products/', [ProductController::class, 'store']);
         Route::delete('products/{product}', [ProductController::class, 'destroy']);
         Route::get('products/{product}', [ProductController::class, 'show']);
+
     });
 
     Route::middleware('managerSelf')->group(function () {
         Route::get('/users/{user}', [UserController::class, 'show']);
     });
+
 });
 
+Route::put('/orders/{order}', [OrderController::class, 'update']);  
 Route::get('/orders/{order}/ordersItems', [OrderController::class, 'orderItems']);
 Route::post('ordersItems', [OrderItemController::class, 'store']);
 Route::post('orders', [OrderController::class, 'store']);
